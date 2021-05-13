@@ -235,3 +235,71 @@ const TopBox = styled(WhiteBox)`
   }
 `;
 ```
+
+## Add google font
+
+```html
+<!-- public/index.html -->
+<link rel="preconnect" href="https://fonts.gstatic.com" />
+<link
+  href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap"
+  rel="stylesheet"
+/>
+```
+
+# #10.2 Cleaning Login Code
+
+```js
+touch src/screens/SignUp.tsx
+```
+
+- Add <SignUP /> to App.tsx
+- Use react-fontawesome
+- Reset more than styled-reset
+
+```js
+// styles.ts
+export const GlobalStyles = createGlobalStyle`
+    ${reset}
+    input {
+      all:unset;
+    }
+    * {
+      box-sizing:border-box;
+    }
+    body {
+        background-color: #FAFAFA;
+        font-size:14px;
+        font-family:'Open Sans', sans-serif;
+        color:rgb(38, 38, 38);
+    }
+    a {
+      text-decoration: none;
+    }
+`;
+```
+
+# #10.3 Shared Components
+
+- centralize routes with routes.ts
+
+```js
+mkdir -p src/components/auth
+
+// src/routes.ts
+const routes = {
+  home: "/",
+  signUp: "/sign-up",
+};
+export default routes;
+```
+
+```js
+touch src/components/auth/AuthLayout.tsx
+touch src/shared.tsx
+touch src/components/auth/Button.tsx
+touch src/components/auth/Separator.tsx
+touch src/components/auth/Input.tsx
+touch src/components/auth/FormBox.tsx
+touch src/components/auth/BottomBox.tsx
+```
