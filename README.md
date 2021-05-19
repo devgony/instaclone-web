@@ -17,7 +17,7 @@ find src/ -type f -not \( -name App.tsx -or -name index.tsx \) -delete
 - react-fontawesome
 
 ```
-npm i styled-components react-hook-form react-router-dom @apollo/client graphql react-helmet-async
+npm i styled-components react-hook-form@6.15.1 react-router-dom @apollo/client graphql react-helmet-async
 npm i --save-dev @types/styled-components
 npm i --save-dev @types/react-router-dom
 npm i --save @fortawesome/fontawesome-svg-core
@@ -281,7 +281,7 @@ export const GlobalStyles = createGlobalStyle`
 
 # #10.3 Shared Components
 
-- centralize routes with routes.ts
+- Centralize routes with routes.ts
 
 ```js
 mkdir -p src/components/auth
@@ -302,4 +302,99 @@ touch src/components/auth/Separator.tsx
 touch src/components/auth/Input.tsx
 touch src/components/auth/FormBox.tsx
 touch src/components/auth/BottomBox.tsx
+```
+
+# #10.4 Sign Up UI
+
+## Don't need React.FC to pass props.. just export style component.
+
+```js
+// src/components/auth/Button.tsx
+// src/components/auth/Input.tsx
+```
+
+## Creat FatLink at `shared.tsx`
+
+## Copy from Login.tsx to SignUp.tsx
+
+```js
+// src/screens/SignUp.tsx
+```
+
+# #10.6 Helmet Component
+
+```js
+// src/App.tsx
+return (
+    <HelmetProvider>
+      <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+```
+
+```js
+// touch src/components/PageTtitle.tsx
+const PageTitle: React.FC<{ title: string }> = ({ title }) => {
+  return (
+    <Helmet>
+      <title>{title} | Instaclone</title>
+    </Helmet>
+  );
+};
+
+// src/screens/Login.tsx
+<PageTitle title="Login" />
+// src/screens/SignUp.tsx
+<PageTitle title="Sign up" />
+```
+
+# #10.7 React Hook Form
+
+```js
+// src/screens/Login.tsx
+const { register } = useForm();
+```
+
+## 1. Should give ref and name for sure
+
+## 2. Validation - use register validation instead of html required
+
+- custom validate
+
+```js
+<Input
+  ref={register({
+    required: "Username is required.",
+    minLength: {
+      value: 5,
+      message: "Username should be more than 5 chars.",
+      validate: currentValue => currentValue.includes("potato"),
+    },
+  })}
+  name="username"
+  type="text"
+  placeholder="Username"
+  hasError={Boolean(errors?.username?.message)}
+/>
+```
+
+## 3. handleSubmit
+
+```js
+<form onSubmit={handleSubmit(onSubmitValid, onSubmitInValid)}>
+```
+
+## 4. formState - mode: onChange, onBlur: when de-focused
+
+## 5. shared `FormError.tsx`
+
+```js
+// touch src/components/auth/FormError.tsx
+```
+
+## 6. Define type at StyledComponent and use custom props
+
+```js
+// src/components/auth/input.tsx
+const Input = styled.input<{ hasError?: boolean }>`
+...
+    ${props => (props.hasError ? "tomato" : props.theme.borderColor)};
 ```

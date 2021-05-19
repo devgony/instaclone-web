@@ -12,7 +12,7 @@ const SBottomBox = styled(BaseBox)`
   }
 `;
 const BottomBox: React.FC<{
-  cta: string;
+  cta: string; // call to action
   link: string;
   linkText: string;
 }> = ({ cta, link, linkText }) => {

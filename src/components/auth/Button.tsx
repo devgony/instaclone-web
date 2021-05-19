@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const SButton = styled.input`
+const Button = styled.input`
   border: none;
   border-radius: 3px;
   margin-top: 12px;
@@ -10,9 +10,10 @@ const SButton = styled.input`
   padding: 8px 0px;
   font-weight: 600;
   width: 100%;
+  opacity: ${props => (props.disabled ? "0.2" : "1")};
 `;
 
-const Button: React.FC<{ type: string; value: string }> = props => {
-  return <SButton {...props} />;
-};
+// const Button: React.FC<{ type: string; value: string }> = props => {
+//   return <SButton {...props} />;
+// };
 export default Button;
