@@ -398,3 +398,55 @@ const Input = styled.input<{ hasError?: boolean }>`
 ...
     ${props => (props.hasError ? "tomato" : props.theme.borderColor)};
 ```
+
+# #10.9 Apollo Client
+
+## Add apollo with Cache
+
+```js
+// apollo.ts
+export const client = new ApolloClient({
+  uri: "http://localhost:4001/graphql",
+  cache: new InMemoryCache(),
+});
+```
+
+## Cover with apolloProvider
+
+```js
+/// App.tsx
+return (
+    <ApolloProvider client={client}>
+```
+
+# #10.10 Login part One
+
+## configure `apollo:codegen`
+
+## This project doesn't have globalTypes => `--globalTypesFile false`
+
+```js
+// touch apollo.config.js
+module.exports = {
+  client: {
+    includes: ["./src/**/*.{tsx,ts}"],
+    tagName: "gql",
+    service: {
+      name: "instaclone-backend",
+      url: "http://localhost:4001/graphql",
+    },
+  },
+};
+
+// package.json
+"apollo:codegen": "rimraf src/**generated** && apollo client:codegen src/**generated** --target=typescript --outputFlat --globalTypesFile false",
+"start": "npm run apollo:codegen & react-scripts start",
+```
+
+# #10.11 Login part Two
+
+## `clearErrors` onChange
+
+## save token to localStorage at `Login.tsx`
+
+## `logUserIn, logUserOut` at `apollo.ts`
