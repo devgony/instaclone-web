@@ -75,11 +75,12 @@ const Login = () => {
       onCompleted,
     }
   );
-  const onSubmitValid = (data: { data: string }) => {
+  const onSubmitValid = (data: loginVariables) => {
     if (loading) {
       return;
     }
-    const { username, password } = getValues();
+    // const { username, password } = getValues();
+    const { username, password } = data;
     login({
       variables: { username, password },
     });

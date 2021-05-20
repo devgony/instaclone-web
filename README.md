@@ -450,3 +450,5 @@ module.exports = {
 ## save token to localStorage at `Login.tsx`
 
 ## `logUserIn, logUserOut` at `apollo.ts`
+
+# #10.12 Create Account
