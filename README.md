@@ -483,4 +483,45 @@ useForm({
 
 ## Homework: Why only 2nd push way works?
 
-#
+# #10.14 Dark Mode
+
+## 1. darkModeVar at `apollo.ts`
+
+```js
+export const darkModeVar = makeVar(Boolean(localStorage.getItem(DARK_MODE)));
+export const enableDarkMode = () => {
+  localStorage.setItem(DARK_MODE, "enabled");
+  darkModeVar(true);
+};
+export const disableDarkMode = () => {
+  localStorage.removeItem(DARK_MODE);
+  darkModeVar(false);
+};
+```
+
+## 2. `DarkModeBtn` at Footer of `AuthLayout.tsx`
+
+```js
+const darkMode = useReactiveVar(darkModeVar);
+...
+<Footer>
+  <DarkModeBtn onClick={darkMode ? disableDarkMode : enableDarkMode}>
+    <FontAwesomeIcon icon={darkMode ? faSun : faMoon} />
+  </DarkModeBtn>
+</Footer>
+```
+
+## 3. props.theme to `styles.ts`
+
+```js
+background-color: ${props => props.theme.bgColor};
+color: ${props => props.theme.fontColor};
+```
+
+## 4. BaseBox of `shared.ts`
+
+```js
+export const BaseBox = styled.div`
+  background-color: ${props => props.theme.bgColor};
+  border: 1px solid ${props => props.theme.borderColor};
+```

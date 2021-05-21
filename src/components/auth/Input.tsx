@@ -1,6 +1,7 @@
 import styled from "styled-components";
 // : React.FC<{ hasError: boolean }>
 const Input = styled.input<{ hasError?: boolean }>`
+  color: rgb(38, 38, 38);
   width: 100%;
   border-radius: 3px;
   padding: 7px;
