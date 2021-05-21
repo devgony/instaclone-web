@@ -5,9 +5,10 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gql from "graphql-tag";
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { DeepMap, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { logUserIn } from "../apollo";
 import AuthLayout from "../components/auth/AuthLayout";
@@ -25,6 +26,10 @@ import { login, loginVariables } from "../__generated__/login";
 // const Title = styled.h1`
 //   color: ${props => props.theme.fontColor};
 // `;
+
+const Notification = styled.div`
+  color: #2ecc71;
+`;
 
 const FacebookLogin = styled.div`
   color: #385285;
@@ -45,6 +50,11 @@ const LOGIN_MUTATION = gql`
 `;
 
 const Login = () => {
+  const location =
+    useLocation<{ username: string; password: string; message: string }>();
+  useEffect(() => {
+    console.log(location);
+  });
   const {
     register,
     handleSubmit,
@@ -55,6 +65,12 @@ const Login = () => {
     clearErrors,
   } = useForm({
     mode: "onChange",
+    defaultValues: {
+      username: location?.state?.username || "",
+      password: location?.state?.password || "",
+      result: undefined,
+      message: undefined,
+    },
   });
   const onCompleted = (data: login) => {
     const {
@@ -96,13 +112,14 @@ const Login = () => {
         <div>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
+        <Notification>{location?.state?.message}</Notification>
         <form onSubmit={handleSubmit(onSubmitValid)}>
           <Input
             ref={register({
               required: "Username is required.",
               minLength: {
                 value: 5,
-                message: "Username should be more than 5 chars.",
+                message: "Username should be longer than 5 chars.",
               },
             })}
             onChange={clearLoginError}
@@ -138,8 +155,8 @@ const Login = () => {
       </FormBox>
       <BottomBox
         cta="Don't have an account?"
-        link={routes.signUp}
         linkText="Sign up"
+        link={routes.signUp}
       />
     </AuthLayout>
   );

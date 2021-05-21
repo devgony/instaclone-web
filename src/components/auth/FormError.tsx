@@ -7,7 +7,7 @@ const SFormError = styled.span`
   margin: 5px 0px 10px 0px;
 `;
 
-const FormError: React.FC<{ message: string }> = ({ message }) => {
+const FormError: React.FC<{ message: string | undefined }> = ({ message }) => {
   return message === "" || !message ? null : <SFormError>{message}</SFormError>;
 };
 

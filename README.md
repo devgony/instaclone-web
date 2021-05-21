@@ -451,4 +451,36 @@ module.exports = {
 
 ## `logUserIn, logUserOut` at `apollo.ts`
 
-# #10.12 Create Account
+# #10.12 Create Account (`SignUp.tsx`)
+
+# #10.13 Redirecting Users
+
+## Send parameter when push history
+
+```js
+history.push(routes.home, {
+  message: "Account created. Please log in.",
+  username,
+  password,
+});
+```
+
+### Get colors: `https://flatuicolors.com/palette/defo`
+
+## DefaultValues - at ts, need to define all
+
+```js
+useForm({
+  mode: "onChange",
+  defaultValues: {
+    username: location?.state?.username || "",
+    password: location?.state?.password || "",
+    result: undefined,
+    message: undefined,
+  },
+});
+```
+
+## Homework: Why only 2nd push way works?
+
+#

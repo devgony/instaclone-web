@@ -5,6 +5,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gql from "graphql-tag";
+import { stringify } from "querystring";
 import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
@@ -58,13 +59,27 @@ const CREATE_ACCOUNT_MUTATION = gql`
 function SignUp() {
   const history = useHistory();
   const onCompleted = (data: createAccount) => {
+    const { username, password } = getValues();
+    console.log(username, password);
     const {
       createAccount: { ok, error },
     } = data;
     if (!ok) {
       return;
     }
-    history.push(routes.home);
+    // history.push(routes.home, {
+    //   message: "Account created. Please log in.",
+    //   username,
+    //   password,
+    // });
+    history.push({
+      pathname: routes.home,
+      state: {
+        message: "Account created. Please log in.",
+        username,
+        password,
+      },
+    });
   };
   const [createAccount, { loading }] = useMutation<
     createAccount,
@@ -72,9 +87,10 @@ function SignUp() {
   >(CREATE_ACCOUNT_MUTATION, {
     onCompleted,
   });
-  const { register, handleSubmit, errors, formState } = useForm({
-    mode: "onChange",
-  });
+  const { register, handleSubmit, errors, formState, getValues, watch } =
+    useForm({
+      mode: "onChange",
+    });
   const onSubmitValid = (data: createAccountVariables) => {
     if (loading) {
       return;
@@ -85,6 +101,8 @@ function SignUp() {
       },
     });
   };
+  // const { username, password } = watch();
+  // console.log(username, password);
   return (
     <AuthLayout>
       <PageTitle title="Sign up" />
