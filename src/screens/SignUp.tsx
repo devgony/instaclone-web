@@ -6,7 +6,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gql from "graphql-tag";
 import { stringify } from "querystring";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import AuthLayout from "../components/auth/AuthLayout";
@@ -60,7 +60,6 @@ function SignUp() {
   const history = useHistory();
   const onCompleted = (data: createAccount) => {
     const { username, password } = getValues();
-    console.log(username, password);
     const {
       createAccount: { ok, error },
     } = data;
@@ -88,10 +87,10 @@ function SignUp() {
     onCompleted,
   });
   const { register, handleSubmit, errors, formState, getValues, watch } =
-    useForm({
+    useForm<createAccountVariables>({
       mode: "onChange",
     });
-  const onSubmitValid = (data: createAccountVariables) => {
+  const onSubmitValid: SubmitHandler<createAccountVariables> = data => {
     if (loading) {
       return;
     }

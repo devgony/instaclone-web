@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gql from "graphql-tag";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { DeepMap, useForm } from "react-hook-form";
+import { DeepMap, SubmitHandler, useForm } from "react-hook-form";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { logUserIn } from "../apollo";
@@ -52,9 +52,6 @@ const LOGIN_MUTATION = gql`
 const Login = () => {
   const location =
     useLocation<{ username: string; password: string; message: string }>();
-  useEffect(() => {
-    console.log(location);
-  });
   const {
     register,
     handleSubmit,
@@ -91,7 +88,7 @@ const Login = () => {
       onCompleted,
     }
   );
-  const onSubmitValid = (data: loginVariables) => {
+  const onSubmitValid: SubmitHandler<loginVariables> = data => {
     if (loading) {
       return;
     }

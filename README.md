@@ -525,3 +525,108 @@ export const BaseBox = styled.div`
   background-color: ${props => props.theme.bgColor};
   border: 1px solid ${props => props.theme.borderColor};
 ```
+
+# #9.1 React Hook Form
+
+```ts
+// just example.
+interface IForm {
+  name: string;
+  lastName?: string;
+}
+
+const { register, handleSubmit, getValues } = useForm<IForm>();
+```
+
+## case#1. onSubmitValid with `SubmitHandler<IForm>` - too verbose
+
+```js
+const onSubmitValid: SubmitHandler<IForm> = data => {
+  const { name, lastName } = data;
+};
+```
+
+## case#2. onSubmitValid with `getValues()`
+
+```js
+const onSubmitValid = () => {
+  const { name, lastName } = getValues();
+};
+```
+
+## Homework: how to handle `result`, `message` at `Login.tsx`?
+
+# #9.2 GraphQL
+
+## install apollo globally
+
+```js
+npm install -g apollo
+
+// package.json
+"apollo:codegen": "rimraf src/__generated__ && apollo client:codegen src/__generated__ --target=typescript --outputFlat --globalTypesFile false",
+
+// Login.tsx
+const [login, { loading, data }] = useMutation<login, loginVariables>(
+```
+
+## If onComplete is used with anonymous callback, don't need additaional type
+
+# #11.0 Header and Layout
+
+## enclose with Layout.tsx
+
+```js
+touch src/components/Header.tsx
+touch src/components/Layout.tsx
+
+// App.tsx
+{isLoggedIn ? (<Layout><Home /></Layout>) : (<Login />)}
+```
+
+# #11.1 Header part Two
+
+## enclose `Header.tsx` with isLoggedInVar for security just in case
+
+```js
+// Header.tsx
+isLoggedIn ? ...
+: (<Link to={routes.home}><Button>Login</Button></Link>)
+```
+
+## Backend: Add me resolver
+
+## me should be shared
+
+```js
+mkdir src/hooks
+touch src/hooks/useUser.ts
+```
+
+# #11.2 Header part Three
+
+## For protected resolver like `me`, should concat token to httpHeader
+
+```js
+// apollo.ts
+const httpLink = createHttpLink({
+  uri: "http://localhost:4001/graphql",
+});
+const authLink = setContext((_, { headers }) => {
+  return {
+    headers: {
+      ...headers,
+      token: localStorage.getItem(TOKEN),
+    },
+  };
+});
+
+export const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+});
+```
+
+## Homework: login => corrupt token => redirect to login => login doesn't work
+
+## try no cache for `me`
