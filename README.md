@@ -296,7 +296,7 @@ export default routes;
 
 ```js
 touch src/components/auth/AuthLayout.tsx
-touch src/shared.tsx
+touch src/components/shared.tsx
 touch src/components/auth/Button.tsx
 touch src/components/auth/Separator.tsx
 touch src/components/auth/Input.tsx
@@ -627,6 +627,53 @@ export const client = new ApolloClient({
 });
 ```
 
-## Homework: login => corrupt token => redirect to login => login doesn't work
+## login => corrupt token => redirect to login => login doesn't work => use `fetchPolicy: "no-cache"`
 
-## try no cache for `me`
+# #11.3 Avatar
+
+## useUse return user data => if data, show avatar at `Header.tsx
+
+## create Avatar component
+
+```js
+touch src/components/Avatar.tsx
+```
+
+## Extend with partial type + intersection
+
+```js
+React.FC<Partial<me_me> & lg>
+```
+
+# #11.4 Photo Component part One
+
+## The main course of frontend
+
+## seeFeed at `Home.tsx`
+
+## FatText at `shared.tsx`
+
+# #11.6 isLiked
+
+## add isLiked to backend and Home.tsx
+
+## Use SolidHeart
+
+```js
+import { faHeart as SolidHeart } from "@fortawesome/free-solid-svg-icons";
+```
+
+# #11.7 Liking Photos
+
+## Separate photo from `Home.tsx` to `Photo.tsx`
+
+```js
+mkdir src/components/feed/
+touch src/components/feed/Photo.tsx
+```
+
+## TS onClick should be enclosed by `()=>{}`
+
+```js
+<PhotoAction onClick={() => toggleLikeMutation()}>
+```

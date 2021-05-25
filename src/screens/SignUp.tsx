@@ -17,7 +17,7 @@ import Input from "../components/auth/Input";
 import Separator from "../components/auth/Separator";
 import PageTitle from "../components/PageTtitle";
 import routes from "../routes";
-import { BaseBox, FatLink } from "../shared";
+import { BaseBox, FatLink } from "../components/shared";
 import {
   createAccount,
   createAccountVariables,

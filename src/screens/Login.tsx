@@ -20,7 +20,7 @@ import Input from "../components/auth/Input";
 import Separator from "../components/auth/Separator";
 import PageTitle from "../components/PageTtitle";
 import routes from "../routes";
-import { BaseBox } from "../shared";
+import { BaseBox } from "../components/shared";
 import { login, loginVariables } from "../__generated__/login";
 
 // const Title = styled.h1`

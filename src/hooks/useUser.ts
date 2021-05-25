@@ -16,14 +16,14 @@ const useUser = () => {
   const hasToken = useReactiveVar(isLoggedInVar);
   const { data, error } = useQuery<me>(ME_QUERY, {
     skip: !hasToken,
+    fetchPolicy: "no-cache",
   });
   useEffect(() => {
-    console.log(data, error);
     if (data?.me === null) {
       console.log("wrong token => logout");
       logUserOut();
     }
   }, [data]);
-  return;
+  return { data };
 };
 export default useUser;
