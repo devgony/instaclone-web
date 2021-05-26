@@ -144,8 +144,10 @@ const Photo: React.FC<seeFeed_seeFeed> = ({
             <FontAwesomeIcon icon={faBookmark} />
           </div>
         </PhotoActions>
-        <Comments {...{ user, caption, commentNumber, comments }} />
         <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
+        <Comments
+          {...{ photoId: id, user, caption, commentNumber, comments }}
+        />
       </PhotoData>
     </PhotoContainer>
   );

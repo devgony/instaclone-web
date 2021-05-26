@@ -858,3 +858,46 @@ const updateToggleLike: MutationUpdaterFn<toggleLike> = (cache, result) => {
   }
 };
 ```
+
+# #11.16 Create Comment part One (06:44)
+
+## useForm
+
+## CREATE_COMMENT_MUTATION
+
+## onSubmitValid, clean input with setValue
+
+# #11.17 Create Comment part Two (12:22)
+
+## BACKEND: add id to MutationResponse
+
+## Fake new comment at cache
+
+### get userData from `useUser()`
+
+```ts
+// Comments.tsx
+if (ok && userData?.me) {
+  const newComment = {
+    __typename: "Comment",
+    createdAt: Date.now() + "",
+    id,
+    isMine: true,
+    payload,
+    user: {
+      ...userData.me,
+    },
+  };
+  cache.modify({
+    id: `Photo:${photoId}`,
+    fields: {
+      comments(prev) {
+        return [...prev, newComment];
+      },
+      commentNumber(prev) {
+        return prev + 1;
+      },
+    },
+  });
+}
+```
