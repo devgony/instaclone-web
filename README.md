@@ -677,3 +677,184 @@ touch src/components/feed/Photo.tsx
 ```js
 <PhotoAction onClick={() => toggleLikeMutation()}>
 ```
+
+# #11.8 Refetching Queries ~ #11.9
+
+- why serve variables at definition?
+
+## 1. apollo cache indirect mode: refetch? => only when it is tiny or it is too burden
+
+```js
+// Photo.tsx
+refetchQueries: [{ query: FEED_QUERY }],
+```
+
+## 2. by fragment manually
+
+### Use type MutationUpdaterFn<toggleLike>
+
+### fragment name can be any
+
+```js
+const updateToggleLike: MutationUpdaterFn<toggleLike> = (cache, result) => {
+  if (result.data?.toggleLike.ok) {
+    cache.writeFragment({
+      id: `Photo:${id}`,
+      fragment: gql`
+        fragment BullshitNAME on Photo {
+          isLiked
+        }
+      `,
+      data: {
+        isLiked: !isLiked,
+      },
+    });
+  }
+};
+```
+
+# #11.10 readFragment
+
+## readFragment: What if we don't have info from React props
+
+```js
+// Photo.tsx
+const updateToggleLike: MutationUpdaterFn<toggleLike> = (cache, result) => {
+  if (result.data?.toggleLike.ok) {
+    const fragmentId = `Photo:${id}`;
+    const fragment = gql`
+      fragment BullshitNAME on Photo {
+        isLiked
+        likes
+      }
+    `;
+    const dataFromFragment =
+      cache.readFragment <
+      seeFeed_seeFeed >
+      {
+        id: fragmentId,
+        fragment,
+      };
+    if (
+      dataFromFragment &&
+      "isLiked" in dataFromFragment &&
+      "likes" in dataFromFragment
+    ) {
+      const { isLiked, likes } = dataFromFragment; // just in case if no data at props
+      cache.writeFragment({
+        id: fragmentId,
+        fragment,
+        data: {
+          isLiked: !isLiked,
+          likes: isLiked ? likes - 1 : likes + 1,
+        },
+      });
+    }
+  }
+};
+```
+
+# #11.11 Comments part One (11:31)
+
+## BACKEND: modify comments => commentNumber
+
+## BACKEND: add comments: comment[]
+
+## Comments, Comment, CommentCaption to Photo.tsx
+
+# #11.12 Comments part Two (10:30)
+
+## add `comment?.payload`
+
+## separate Comment from `Photo.tsx` to `Comments.tsx`
+
+## Use Pick Utility Type
+
+```js
+// touch src/components/feed/Comments.tsx
+  Pick<seeFeed_seeFeed, "user" | "caption" | "commentNumber" | "comments">
+```
+
+## Homework: How to change type's key name? from user to author?
+
+## separate Comment from `Comments.tsx` to `Comment.tsx`
+
+```js
+touch src/components/feed/Comment.tsx
+```
+
+# #11.13 Parsing Hashtags (12:02)
+
+## sanitize-html: clean dangerous HTML
+
+## dangerouslySetInnerHTML: escape from React's HTML protection
+
+```js
+npm i sanitize-html
+npm i --save-dev @types/sanitize-html
+// Comment.tsx
+const cleanedPayload = sanitizeHtml(
+    payload.replace(/#[\w]+/g, "<mark>$&</mark>"),
+    {
+      allowedTags: ["mark"],
+    }
+  );
+  return (
+    <CommentContainer>
+      <FatText>{username}</FatText>
+      <CommentCaption
+        dangerouslySetInnerHTML={{
+          __html: cleanedPayload,
+        }}
+      />
+    </CommentContainer>
+  );
+```
+
+# #11.14 Parsing Hashtags part Two (12:18)
+
+## To use Link, change from sanitize-html to maped component
+
+```js
+<CommentCaption>
+  {payload.split(" ").map((word, index) =>
+    /#[\w]+/.test(word) ? (
+      <React.Fragment key={index}>
+        <Link to={`/hashtags/${word}`}>{word}</Link>{" "}
+      </React.Fragment>
+    ) : (
+      <React.Fragment key={index}>{word} </React.Fragment>
+    )
+  )}
+</CommentCaption>
+```
+
+## Homework: parse @\w
+
+# #11.15 cache Modify (05:10)
+
+## Easier way to edit cache: modify of Apollo 3
+
+```ts
+// Photo.tsx
+// remove readFragment, writeFragment
+const updateToggleLike: MutationUpdaterFn<toggleLike> = (cache, result) => {
+  if (result.data?.toggleLike.ok) {
+    const photoId = `Photo:${id}`;
+    cache.modify({
+      id: photoId,
+      fields: {
+        isLiked(prev) {
+          return !prev;
+        },
+        likes(prev) {
+          if (isLiked) {
+            return prev - 1;
+          }
+          return prev + 1;
+        },
+      },
+    });
+  }
+};
+```

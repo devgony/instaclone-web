@@ -11,13 +11,12 @@ import { FatText } from "../shared";
 import { seeFeed_seeFeed } from "../../__generated__/seeFeed";
 import Avatar from "../Avatar";
 import gql from "graphql-tag";
-import { FetchResult, MutationTuple, useMutation } from "@apollo/client";
+import { MutationUpdaterFn, useMutation } from "@apollo/client";
 import {
   toggleLike,
   toggleLikeVariables,
-  toggleLike_toggleLike,
 } from "../../__generated__/toggleLike";
-import { MouseEventHandler } from "react";
+import Comments from "./Comments";
 
 const TOGGLE_LIKE_MUTATION = gql`
   mutation toggleLike($id: Int!) {
@@ -35,6 +34,7 @@ const PhotoContainer = styled.div`
   margin-bottom: 60px;
   max-width: 615px;
 `;
+
 const PhotoHeader = styled.div`
   padding: 15px;
   display: flex;
@@ -50,6 +50,7 @@ const PhotoFile = styled.img`
   min-width: 100%;
   max-width: 100%;
 `;
+
 const PhotoData = styled.div`
   padding: 12px 15px;
 `;
@@ -81,9 +82,32 @@ const Photo: React.FC<seeFeed_seeFeed> = ({
   id,
   user,
   file,
-  isLiked,
+  caption,
   likes,
+  commentNumber,
+  comments,
+  isLiked,
 }) => {
+  const updateToggleLike: MutationUpdaterFn<toggleLike> = (cache, result) => {
+    if (result.data?.toggleLike.ok) {
+      const photoId = `Photo:${id}`;
+      cache.modify({
+        id: photoId,
+        fields: {
+          isLiked(prev) {
+            return !prev;
+          },
+          likes(prev) {
+            if (isLiked) {
+              return prev - 1;
+            }
+            return prev + 1;
+          },
+        },
+      });
+    }
+  };
+
   const [toggleLikeMutation, { loading }] = useMutation<
     toggleLike,
     toggleLikeVariables
@@ -91,6 +115,7 @@ const Photo: React.FC<seeFeed_seeFeed> = ({
     variables: {
       id,
     },
+    update: updateToggleLike,
   });
   return (
     <PhotoContainer key={id}>
@@ -119,6 +144,7 @@ const Photo: React.FC<seeFeed_seeFeed> = ({
             <FontAwesomeIcon icon={faBookmark} />
           </div>
         </PhotoActions>
+        <Comments {...{ user, caption, commentNumber, comments }} />
         <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
       </PhotoData>
     </PhotoContainer>

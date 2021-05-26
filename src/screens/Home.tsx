@@ -1,10 +1,10 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 import Photo from "../components/feed/Photo";
+import PageTitle from "../components/PageTtitle";
 import { seeFeed } from "../__generated__/seeFeed";
-import { toggleLike, toggleLikeVariables } from "../__generated__/toggleLike";
 
-const FEED_QUERY = gql`
+export const FEED_QUERY = gql`
   query seeFeed {
     seeFeed {
       id
@@ -15,7 +15,17 @@ const FEED_QUERY = gql`
       file
       caption
       likes
-      comments
+      commentNumber
+      comments {
+        id
+        user {
+          username
+          avatar
+        }
+        payload
+        isMine
+        createdAt
+      }
       createdAt
       isMine
       isLiked
@@ -27,6 +37,7 @@ const Home = () => {
   const { data } = useQuery<seeFeed>(FEED_QUERY);
   return (
     <div>
+      <PageTitle title="Home" />
       {data?.seeFeed?.map(
         photo => photo && <Photo key={photo.id} {...photo} />
       )}
