@@ -901,3 +901,52 @@ if (ok && userData?.me) {
   });
 }
 ```
+
+# #11.18 Create Comment part Three (07:59)
+
+## To add `__ref:"Comment:$n"`, have to write to fragment eventually.
+
+```js
+// Comments.tsx
+const newCacheComment = cache.writeFragment({ // has __ref:"Comment:$n
+  data: newComment,
+  fragment: gql`
+    fragment BSName on Comment {
+      id
+      createdAt
+      isMine
+      payload
+      user {
+        username
+        avatar
+      }
+    }
+  `,
+});
+...
+              return [...prev, newCacheComment];
+```
+
+# #11.19 Delete Comment (12:17)
+
+- minus
+- button
+
+## mutation at `Comment.tsx`
+
+## delete from cache => `evict()`
+
+## decrease `commentNumber` from `Photo`
+
+```js
+cache.evict({ id: `Comment:${id}` });
+cache.modify({
+  id: `Photo:${photoId}`,
+  fields: {
+    commentNumber(prev) {
+      console.log(prev);
+      return prev - 1;
+    },
+  },
+});
+```

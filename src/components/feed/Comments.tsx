@@ -75,11 +75,26 @@ const Comments: React.FC<
             ...userData.me,
           },
         };
+        const newCacheComment = cache.writeFragment({
+          data: newComment,
+          fragment: gql`
+            fragment BSName on Comment {
+              id
+              createdAt
+              isMine
+              payload
+              user {
+                username
+                avatar
+              }
+            }
+          `,
+        });
         cache.modify({
           id: `Photo:${photoId}`,
           fields: {
             comments(prev) {
-              return [...prev, newComment];
+              return [...prev, newCacheComment];
             },
             commentNumber(prev) {
               return prev + 1;
@@ -120,6 +135,9 @@ const Comments: React.FC<
               key={comment.id}
               username={comment.user.username}
               payload={comment.payload}
+              id={comment.id}
+              isMine={comment.isMine}
+              photoId={photoId}
             />
           )
       )}
