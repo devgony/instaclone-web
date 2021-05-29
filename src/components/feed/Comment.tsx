@@ -68,7 +68,9 @@ const Comment: React.FC<{
   };
   return (
     <CommentContainer>
-      <FatText>{username}</FatText>
+      <Link to={`/users/${username}`}>
+        <FatText>{username}</FatText>
+      </Link>
       <CommentCaption>
         {payload.split(" ").map((word, index) =>
           /#[\w]+/.test(word) ? (

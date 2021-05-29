@@ -950,3 +950,133 @@ cache.modify({
   },
 });
 ```
+
+# #12.0 useParams (08:40)
+
+## Link to `Header.tsx`, `Photo.tsx`, `Comment.tsx`
+
+## inherit color
+
+```js
+// styles.ts
+a {
+      ...
+      color: inherit;
+    }
+```
+
+## create Profile.tsx
+
+```js
+// touch src/screens/Profile.tsx
+
+// App.tsx
+...
+<Route path={`/users/:username`}>
+  <Profile />
+</Route>
+...
+```
+
+## `useParams` instead of useLocation
+
+```js
+// Profile.tsx
+  const { username } = useParams<{ username: string }>();
+```
+
+# #12.1 Queries and Fragments (11:26)
+
+## apollo convention review: 1st line for F.E, 2nd for B.E
+
+## fragment
+
+```js
+touch src/fragments.ts
+```
+
+## same username but why at rootQuery? => Query need id? => try keyFields from id to username
+
+# #12.2 keyFields (08:42)
+
+## new cache config: userDefined keyFields
+
+- it removes redundant data at root query and leave `__ref: $username` only
+
+```ts
+// apollo.ts
+export const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache({
+    typePolicies: {
+      User: {
+        keyFields: obj => `User:${obj.username}`,
+      },
+    },
+  }),
+});
+```
+
+# #12.3 Follow Unfollow part One (04:49)
+
+## Profile, Grid, Icon.. at `Profile.tsx`
+
+## Cover Profile with Layout at `App.tsx`
+
+## Cover faHome with Link at `Header.tsx`
+
+# #12.4 Follow Unfollow part Two (12:33)
+
+### Ternary hell more than 2 ? => separate callback and use if case
+
+```js
+// Profile.tsx
+const getButton = (seeProfile: seeProfile_seeProfile) => {
+    const { isMe, isFollowing } = seeProfile;
+    if (isMe) {
+      return <ProfileBtn>Edit Profile</ProfileBtn>;
+    }
+    if (isFollowing) {
+      return <ProfileBtn>Unfollow</ProfileBtn>;
+    } else {
+      return <ProfileBtn>Follow</ProfileBtn>;
+    }
+  };
+...
+    {data?.seeProfile ? getButton(data.seeProfile) : null}
+```
+
+### Styled as: extends property but change element type
+
+### Helmet with loading
+
+```
+// index.html
+<title>Instaclone</title>
+```
+
+### FOLLOW_USER_MUTATION, FOLLOW_USER_MUTATION at `Profile.tsx`
+
+# #12.5 Follow Unfollow part Three (08:56)
+
+## useMutation at 'Profile.tsx`
+
+## Simple query? just try refetch, expensive or pagination? direct update with cache.modify
+
+- add `totalFollowing, totalFollowers` to ME query and export
+
+```js
+const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
+  variables: {
+    username,
+  },
+  refetchQueries: [
+    { query: SEE_PROFILE_QUERY, variables: { username } },
+    { query: ME_QUERY },
+  ],
+});
+```
+
+## Homework: avatar default needed
+
+## But refetch query need to refetch others as well..
