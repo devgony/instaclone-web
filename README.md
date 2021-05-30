@@ -1128,4 +1128,4 @@ cache.modify({
 - reactive variable
 - react hook form: editProfile
 - styled extend, props, theme: darkmode
-- apollo cache: substitute of redux
+- apollo cache: a substitute of redux
