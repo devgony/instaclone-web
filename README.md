@@ -1080,3 +1080,52 @@ const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
 ## Homework: avatar default needed
 
 ## But refetch query need to refetch others as well..
+
+# #12.6 Follow Unfollow part Four (09:49)
+
+## update cache
+
+### opt1. update function gives cache, result
+
+### opt2. onCompleted but does not cache: just import apolloClient
+
+```js
+// Profile.tsx
+const client = useApolloClient();
+...
+const followUserCompleted = (data: followUser) => {
+    const {
+      followUser: { ok },
+    } = data;
+    if (!ok) {
+      return;
+    }
+    const { cache } = client;
+    cache.modify({
+      ...
+```
+
+## Homework: what is the case that has to be with writeFragement?
+
+# #12.7 Follow Unfollow part Five (04:39)
+
+## Even though there is no totalFollowing and totalFollower at me Query, if variable is added on cache, it works
+
+```js
+// Profile.tsx
+cache.modify({
+  id: `User:${userData?.me?.username}`,
+  fields: {
+    totalFollowing(prev) {
+      return prev + 1;
+    },
+  },
+});
+```
+
+# #12.8 Web Conclusions (02:42)
+
+- reactive variable
+- react hook form: editProfile
+- styled extend, props, theme: darkmode
+- apollo cache: substitute of redux
