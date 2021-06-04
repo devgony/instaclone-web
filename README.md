@@ -142,6 +142,7 @@ const Login = () => {
 - ThemeProvider
 
 ```js
+// styles.ts
 const lightTheme = { fontColor: "#2c2c2c", bgColor: "lightgray" };
 const darkTheme = { fontColor: "lightgray", bgColor: "#2c2c2c" };
 <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>...</ThemeProvider>;
