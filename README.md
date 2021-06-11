@@ -1130,3 +1130,24 @@ cache.modify({
 - react hook form: editProfile
 - styled extend, props, theme: darkmode
 - apollo cache: a substitute of redux
+
+# #19.5 Deploy Frontend (09:28)
+
+## NODE_ENV ternary
+
+```js
+// apollo.ts
+const httpLink = createHttpLink({
+  uri:
+    process.env.NODE_ENV === "production"
+      ? "https://instaclone-backend-henry.herokuapp.com/graphql"
+      : "http://localhost:4001/graphql",
+});
+```
+
+## `_redirects`
+
+```js
+// touch public/_redirects
+/* /index.html 200
+```
